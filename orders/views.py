@@ -2,17 +2,73 @@ import django
 from django.shortcuts import render
 from . models import ORDER_DETAILS, ORDER_MASTER
 from products.models import PRODUCT_MASTER
+from orders.serializers import OrderSerializer
 from users.models import Customer_Detail
 from django.http import HttpResponse
 import json
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
+from django.db import connections
+cursor = connections['default'].cursor()
+import urllib
+
+import requests
+import xml.etree.ElementTree as ET
+import xmltodict
+
+
+
+@api_view(['GET', 'POST'])
+def order_master(request):
+
+
+    # a = ORDER_MASTER(ORDER_NO=18)
+    # a.save()
+    # print(a)
+    if request.method == 'GET':
+        print('')
+        # CUSTOMER_ID=1,
+        #      LATITUDE=1, 
+        #      LOGITUDE=1,
+        #      USER_ID=1,
+        #      ORDERDETAILS='1'
+        # cursor = connections['default'].cursor()
+        # cursor.execute("INSERT INTO ORDER_MASTER(ORDER_NO) VALUES( 13  )")
+        # order_masters = ORDER_MASTER.objects.all()
+        # print(order_masters)
+        # return Response('success')
+
+       
+        # order_master_create = ORDER_MASTER.objects.create(
+        #     ORDER_NO= '14',
+        #     )
+        # print(order_master_create)
+        
+        # order_masters = ORDER_MASTER.objects.all() #.order_by('-ORDER_NO')
+        # serializer = OrderSerializer(data=order_masters, many=True)
+        # if serializer.is_valid():
+        #     print('aaaaaaaaaaaa')
+        # else:
+        #     return Response(serializer.errors)
+    return Response('a')
+
 
 @api_view(['GET', 'POST'])
 def create_order(request):
 
+
+    if request.method == 'POST':
+        json_data = json.loads(request.body)
+        print(json_data)
+        order_details = request.data['ORDER_DETAILS']
+
+        for i in order_details:
+            print(i['ITEM_PRICE'])
+        #print(eval(request.body))
+
     # if request.method == 'GET':
     #     sale_orders = ORDER_MASTER.objects.all()
+    #     return Response('hi')
        
     if request.method == 'GET':
         final_output = []
@@ -21,7 +77,7 @@ def create_order(request):
         for so in sales_orders:
             sale_order_data = {
                 'ORDER_NO': so.ORDER_NO,
-                'CUSTOMER_ID': so.CUSTOMER_ID_id,
+                'CUSTOMER_ID': so.CUSTOMER_ID,
                 'STATUS': so.STATUS,
                 'LATITUDE': so.LATITUDE,
                 'LOGITUDE': so.LOGITUDE,
@@ -114,5 +170,12 @@ def create_order(request):
     return HttpResponse('Apel Mahmud')
 
 
-
-
+@api_view(['GET', 'POST'])
+def product(request):
+    response = requests.get('https://api.rcl-group.net/api/rcl_api.ashx?method=GETPRODUCTLIST')
+    tree = ET.fromstring(response.content)
+    xpars = xmltodict.parse(response.text)
+    print(response.text)
+    json_data = json.dumps(xpars)
+    print(json_data)
+    return HttpResponse(json_data)

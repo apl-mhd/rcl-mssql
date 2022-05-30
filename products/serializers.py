@@ -1,7 +1,7 @@
 
 from dataclasses import fields
 from rest_framework import serializers
-from . models import *
+from . models import PRODUCT_MASTER
 
 class ProductSerializer(serializers.ModelSerializer):
 
