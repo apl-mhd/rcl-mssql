@@ -28,11 +28,11 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'users',
-    'orders',
+    'user_app',
     'products',
+    'orders',
     'rest_framework',
     'corsheaders',
-    'user_app',
 ]
 
 MIDDLEWARE = [
@@ -71,7 +71,6 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework_simplejwt.authentication.JWTAuthentication',
         'rest_framework.authentication.TokenAuthentication',
-
     ],
 }
 
@@ -151,11 +150,6 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-
-AUTH_USER_MODEL = 'user_app.User'
-
-
 
 
 CORS_ORIGIN_ALLOW_ALL = True

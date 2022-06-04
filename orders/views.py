@@ -1,4 +1,3 @@
-import django
 from django.shortcuts import render
 from . models import ORDER_DETAILS, ORDER_MASTER
 from products.models import PRODUCT_MASTER
@@ -8,19 +7,90 @@ from django.http import HttpResponse
 import json
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
-from django.db import connections
-cursor = connections['default'].cursor()
-import urllib
-
 import requests
 import xml.etree.ElementTree as ET
 import xmltodict
+from django.db import connections
+from django.views.decorators.csrf import csrf_exempt
+
+
+@api_view(['GET', 'POST'])
+@csrf_exempt
+def order(request):
+    if request.method == 'POST':
+      json_data = json.loads(request.body)
+      customer_id = json_data['customer']['id']
+      last_order_no = ORDER_MASTER.objects.last().ORDER_NO +1
+
+   
+      order_master = ORDER_MASTER.objects.create(
+          ORDER_NO= last_order_no,
+          CUSTOMER_ID=customer_id,
+          USER_ID = 1
+          )
+
+      for i in json_data['products']:
+          ORDER_DETAILS.objects.create(
+            ORDER_NO = order_master.ORDER_NO,
+            PROD_CODE = i['PROD_CODE'],
+            RATE = i['RATE'],
+            QTY = i['QTY'],
+            ITEM_PRICE = float(i['RATE']) * float(i['QTY'])
+            )
+          print(i)
+      return Response(json_data)
+
+    
+       
+    if request.method == 'GET':
+        final_output = []
+        sol_data = {}
+        sales_orders = ORDER_MASTER.objects.all()
+        details = ORDER_DETAILS.objects.all()
+        #print(details)
+        for so in sales_orders:
+            sale_order_data = {
+                'ORDER_NO': so.ORDER_NO,
+                'CUSTOMER_ID': so.CUSTOMER_ID,
+                'STATUS': so.STATUS,
+                'LATITUDE': so.LATITUDE,
+                'LOGITUDE': so.LOGITUDE,
+                'USER_ID': so.USER_ID,
+                'ORDERDETAILS':120,
+                'DOT': so.DOT,
+             }
+            sale_order_line = ORDER_DETAILS.objects.filter(ORDER_NO = so.ORDER_NO)
+            print(sale_order_line)
+            soline = []
+            for sol in sale_order_line:
+                sale_order_line_data = {
+                    'ORDER_TRANSAC_SL': sol.ORDER_TRANSAC_SL,
+                    'PROD_CODE': sol.PROD_CODE,
+                    'RATE': sol.RATE,
+                    'QTY': sol.QTY,
+                    'ITEM_PRICE': sol.ITEM_PRICE
+                    
+                }
+                soline.append(sale_order_line_data)
+            so_id = str(so.ORDER_NO)
+            sol_data['sale_order'] = sale_order_data
+            sol_data['ORDER_DETAILS'] = soline
+            final_output.append({so_id: sol_data})
+            sol_data = {}
+        return Response(final_output)
+
+
+def cursor_test(request):
+    cursor = connections['default'].cursor()
+    a = cursor.execute("SELECT * FROM ORDER_MASTER WHERE ORDER_NO = %s", [1])
+    for i in a:
+        print(i.ORDER_NO)
+    return HttpResponse('test cursor')
 
 
 
 @api_view(['GET', 'POST'])
 def order_master(request):
-
 
     # a = ORDER_MASTER(ORDER_NO=18)
     # a.save()
@@ -52,57 +122,6 @@ def order_master(request):
         #     return Response(serializer.errors)
     return Response('a')
 
-
-@api_view(['GET', 'POST'])
-def create_order(request):
-
-
-    if request.method == 'POST':
-        json_data = json.loads(request.body)
-        print(json_data)
-        order_details = request.data['ORDER_DETAILS']
-
-        for i in order_details:
-            print(i['ITEM_PRICE'])
-        #print(eval(request.body))
-
-    # if request.method == 'GET':
-    #     sale_orders = ORDER_MASTER.objects.all()
-    #     return Response('hi')
-       
-    if request.method == 'GET':
-        final_output = []
-        sol_data = {}
-        sales_orders = ORDER_MASTER.objects.all()
-        for so in sales_orders:
-            sale_order_data = {
-                'ORDER_NO': so.ORDER_NO,
-                'CUSTOMER_ID': so.CUSTOMER_ID,
-                'STATUS': so.STATUS,
-                'LATITUDE': so.LATITUDE,
-                'LOGITUDE': so.LOGITUDE,
-                'USER_ID': so.USER_ID,
-                'ORDERDETAILS':120,
-                'DOT': so.DOT,
-            }
-            sale_order_line = ORDER_DETAILS.objects.filter(ORDER_NO = so.ORDER_NO)
-            soline = []
-            for sol in sale_order_line:
-                sale_order_line_data = {
-                    'ORDER_TRANSAC_SL': sol.ORDER_TRANSAC_SL,
-                    'PROD_CODE': sol.PROD_CODE,
-                    'RATE': sol.RATE,
-                    'QTY': sol.QTY,
-                    'ITEM_PRICE': sol.ITEM_PRICE
-                    
-                }
-                soline.append(sale_order_line_data)
-            so_id = str(so.ORDER_NO)
-            sol_data['sale_order'] = sale_order_data
-            sol_data['ORDER_DETAILS'] = soline
-            final_output.append({so_id: sol_data})
-            sol_data = {}
-        return Response(final_output)
 
 
     

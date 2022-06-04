@@ -11,4 +11,5 @@ def product(request):
     products = PRODUCT_MASTER.objects.all()
     serializer = ProductSerializer(products, many = True)
     return Response(serializer.data)
+    return Response('apel')
 

@@ -1,10 +1,11 @@
 from cgi import print_arguments
+import json
 from urllib import response
 from django.http import HttpResponse
 from django.shortcuts import render
 from requests import request
-from .models import User, UserAccount
-from . serializers import UserSerializer, UserAccountSerializer
+from .models import  UserAccount
+from . serializers import UserAccountSerializer
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from django.views.decorators.csrf import csrf_exempt
@@ -34,11 +35,16 @@ def user_info(request, session_key):
     #return HttpResponse('session_key')
     
 
+@csrf_exempt
+@api_view(['GET', 'POST'])
+def LoginView(request):
 
-class LoginView(APIView):
-    def post(self, request):
-        login_name = request.data['LOGIN_NAME']
-        swap_card = request.data['SWAP_CARD']
+    if request.method == 'POST':
+        json_data =  json.loads(request.body)
+        #print(json.loads(request.body.LOGIN_NAME))
+        #print(len(json_data))
+        login_name = json_data['LOGIN_NAME']
+        swap_card = json_data['SWAP_CARD']
 
         user = UserAccount.objects.filter(LOGIN_NAME=login_name).first()
         
@@ -61,8 +67,8 @@ class LoginView(APIView):
         response.data = {
             'jwt': token
         }
-        
         return response
+        
 
 
 
@@ -75,12 +81,12 @@ def user_account(request):
 
 
 
-@api_view(['GET', 'POST'])
-def user(request):
-    users = User.objects.all()
-    print(users)
-    serializer = UserSerializer(users, many=True)
-    return Response(serializer.data)
+# @api_view(['GET', 'POST'])
+# def user(request):
+#     users = User.objects.all()
+#     print(users)
+#     serializer = UserSerializer(users, many=True)
+#     return Response(serializer.data)
     
             
 @csrf_exempt
