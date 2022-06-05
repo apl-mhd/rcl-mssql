@@ -13,6 +13,7 @@ class ORDER_MASTER(models.Model):
     USER_ID = models.BigIntegerField(blank=True, null=True)
     STATUS = models.CharField(max_length=25, default='PENDING')
     ORDERDETAILS = models.TextField(blank=True, null=True)
+    TOTAL_AMOUNT = models.FloatField(blank=True, null=True)
 
     class Meta:
         db_table = 'ORDER_MASTER'
@@ -49,11 +50,13 @@ class RETURN_REQ_MASTER(models.Model):
     class Meta:
         db_table = 'RETURN_REQ_MASTER'
 
+        
+
 class RETURN_REQ_DETAILS(models.Model):
-    ORDER_TRANSAC_SL = models.IntegerField(primary_key=True)
-    ORDER_NO = models.BigIntegerField(blank=True, null=True)
+    RETURN_TRANSAC_SL = models.AutoField(primary_key=True)
+    RETURN_NO = models.BigIntegerField(blank=True, null=True)
     PROD_CODE = models.BigIntegerField( blank=True, null=True)
-    RATE = models.IntegerField(blank=True, null=True)
+    RATE =  models.DecimalField(max_digits=18, decimal_places=4)
     QTY = models.DecimalField(max_digits=18, decimal_places=4)
     ITEM_PRICE = models.DecimalField(max_digits=18, decimal_places=4)
 

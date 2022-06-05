@@ -9,7 +9,7 @@ class Customer_Detail(models.Model):
     CUSTOMER_NAME = models.CharField(max_length=50, blank=True, null=True)
     CONTACT_PERSON = models.CharField(max_length=50, blank=True, null=True)
     PRESENT_ADDRESS = models.TextField(blank=True, null=True)
-    #CUSTOMER_PIC = models.ImageField(blank=True, null=True)
+    #CUSTOMER_PIC = models.CharField(max_length=50, blank=True, null=True)
     USER_ID = models.BigIntegerField(blank=True, null=True)
     ZONE_CODE = models.CharField(max_length=50, blank=True, null=True)
     ADV_ACCOUNT_CODE = models.BigIntegerField( blank=True, null=True)
@@ -20,7 +20,6 @@ class Customer_Detail(models.Model):
     CREDIT_LIMIT = models.BigIntegerField( blank=True, null=True)
     CUST_CAT = models.CharField(max_length=50, blank=True, null=True)
     
-
     class Meta:
         db_table = 'CUSTOMER_DETAILS'
 

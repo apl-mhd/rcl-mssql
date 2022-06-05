@@ -4,8 +4,9 @@ from django.urls import path, include
 from . import views
 
 urlpatterns = [
-     path('order/', views.order),
-     path('order_master/', views.order_master),
-     path('products/', views.product),
-     path('cursor_test/', views.cursor_test),
+     path('', views.order),
+     path('return/<int:order_id>/', views.sales_return),
+     path('update/<int:order_no>/', views.order_update),
+     path('customer/<int:customer_id>/', views.customer_all_order),
+     path('order_no/<int:order_no>/', views.customer_single_order),
 ]

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from . models import UserAccount
+from . models import UserAccount, JOB_TITLES
 # Register your models here.
 
 
@@ -9,3 +9,4 @@ from . models import UserAccount
 
 # admin.site.register(User, UserAdmin)
 admin.site.register(UserAccount)
+admin.site.register(JOB_TITLES)
