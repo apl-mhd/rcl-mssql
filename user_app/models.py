@@ -23,7 +23,6 @@ class UserAccount(models.Model):
     CREATED_BY = models.BigIntegerField()
     JOB_TITLE_ID = models.BigIntegerField()
     
-
     class Meta:
         db_table = 'USER_ACCOUNT'
 
