@@ -45,6 +45,7 @@ class RETURN_REQ_MASTER(models.Model):
     CUSTOMER_ID =  models.IntegerField(blank=True, null=True)
     TOTAL_AMOUNT = models.FloatField(blank=True, null=True)
     STATUS = models.CharField(max_length=25, default='PENDING')
+    REASON = models.TextField(blank=True, null=True)
 
 
     class Meta:

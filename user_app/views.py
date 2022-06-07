@@ -41,6 +41,7 @@ def user_info(request, session_key):
          user_json['STATUS'] = user.STATUS
          user_json['CREATED_BY'] = user.CREATED_BY
          user_json['JOB_TITLE_ID'] = job_title.JOB_TITLE_NAME
+         
 
          user_json = json.dumps(user_json)
          return HttpResponse(user_json)

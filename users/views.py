@@ -7,6 +7,8 @@ from rest_framework.decorators import api_view
 from .models import Customer_Detail
 from . serializers import CustomerSerializer
 from rest_framework.response import Response
+from django.core.files.storage import FileSystemStorage
+
 
 @api_view(['GET', 'POST'])
 def customer_update(request, id):
@@ -26,15 +28,26 @@ def customer_update(request, id):
 def customer(request):
 
     if request.method == 'POST':
+        #print(type(request.data), '----------')  #class 'dict'(json),  for form data django.http.request.QueryDict'
+        #if type(request.data) == 'django.http.request.QueryDict':
+        request.data._mutable=True
+
+        # upload = request.FILES['img']
+        # fss = FileSystemStorage()
+        # file = fss.save(upload.name, upload)
+        # print(fss.url(file))
+
         customer_detail = Customer_Detail.objects.all().last()
-        print(customer_detail)
         request.data['CUSTOMER_ID'] = customer_detail.CUSTOMER_ID +1
+        print(request.data['CUSTOMER_PIC'], 'aaaaaaaaaa')
+        #request.data['CUST_CAT'] = fss.url(file)
         serializer = CustomerSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
         else:
             return Response(serializer.errors)
+        #return Response('a')
 
     if request.method == 'GET':
         customers = Customer_Detail.objects.all()

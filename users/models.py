@@ -3,13 +3,13 @@ from django.contrib.auth.models import AbstractBaseUser, AbstractUser
 from django.utils import timezone
 
 
-
 class Customer_Detail(models.Model):
     CUSTOMER_ID = models.BigIntegerField(primary_key=True)
     CUSTOMER_NAME = models.CharField(max_length=50, blank=True, null=True)
     CONTACT_PERSON = models.CharField(max_length=50, blank=True, null=True)
     PRESENT_ADDRESS = models.TextField(blank=True, null=True)
     #CUSTOMER_PIC = models.CharField(max_length=50, blank=True, null=True)
+    CUSTOMER_PIC = models.BinaryField(blank=True, null=True)
     USER_ID = models.BigIntegerField(blank=True, null=True)
     ZONE_CODE = models.CharField(max_length=50, blank=True, null=True)
     ADV_ACCOUNT_CODE = models.BigIntegerField( blank=True, null=True)
@@ -19,10 +19,18 @@ class Customer_Detail(models.Model):
     REP_CODE = models.BigIntegerField( blank=True, null=True)
     CREDIT_LIMIT = models.BigIntegerField( blank=True, null=True)
     CUST_CAT = models.CharField(max_length=50, blank=True, null=True)
+    LATITUDE = models.DecimalField(max_digits=18, decimal_places=6, blank=True, null=True)
+    LOGITUDE = models.DecimalField(max_digits=18, decimal_places=6, blank=True, null=True)
     
     class Meta:
         db_table = 'CUSTOMER_DETAILS'
 
+class CUSTOMER_CATEGORY(models.Model):
+    CAT_ID = models.BigIntegerField( blank=True, null=True)
+    CUST_CAT = models.CharField(max_length=50, blank=True, null=True)
+    MAX_DISCRATE = models.FloatField(blank=True, null=True) 
+    class Meta:
+        db_table = 'CUSTOMER_CATEGORY'
 
     
 

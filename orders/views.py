@@ -25,7 +25,7 @@ def sales_return(request, order_id):
             RETURN_NO = return_no,
             ORDER_NO = order_id,
             CUSTOMER_ID = customer_id,
-            TOTAL_AMOUNT = 10
+            REASON = request.data['sale_order']['REASON']
         )
         total_amount = 0
         for i in request.data['ORDER_DETAILS']:
