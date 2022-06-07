@@ -39,15 +39,22 @@ def customer(request):
 
         customer_detail = Customer_Detail.objects.all().last()
         request.data['CUSTOMER_ID'] = customer_detail.CUSTOMER_ID +1
-        print(request.data['CUSTOMER_PIC'], 'aaaaaaaaaa')
-        #request.data['CUST_CAT'] = fss.url(file)
-        serializer = CustomerSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        else:
-            return Response(serializer.errors)
-        #return Response('a')
+        a = request.FILES['CUSTOMER_PIC'].file.read()
+        b= Customer_Detail.objects.create(
+           CUSTOMER_ID =  customer_detail.CUSTOMER_ID +1,
+           CUSTOMER_PIC = a,
+        )
+
+        print(b)
+        
+        # request.data['CUSTOMER_PIC'] = a
+        # serializer = CustomerSerializer(data=request.data)
+        # if serializer.is_valid():
+        #     serializer.save()
+        #     return Response(serializer.data)
+        # else:
+        #     return Response(serializer.errors)
+        return Response('a')
 
     if request.method == 'GET':
         customers = Customer_Detail.objects.all()
