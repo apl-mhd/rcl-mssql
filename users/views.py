@@ -28,27 +28,21 @@ def customer_update(request, id):
 def customer(request):
 
     if request.method == 'POST':
-        #print(type(request.data), '----------')  #class 'dict'(json),  for form data django.http.request.QueryDict'
-        #if type(request.data) == 'django.http.request.QueryDict':
-        request.data._mutable=True
-
+        request.data._mutable=True #if submit from data, for json it woud be false
         # upload = request.FILES['img']
         # fss = FileSystemStorage()
         # file = fss.save(upload.name, upload)
         # print(fss.url(file))
+        #request.data['CUST_CAT'] = fss.url(file)
 
         customer_detail = Customer_Detail.objects.all().last()
         request.data['CUSTOMER_ID'] = customer_detail.CUSTOMER_ID +1
-        print(request.data['CUSTOMER_PIC'], 'aaaaaaaaaa')
-        #request.data['CUST_CAT'] = fss.url(file)
         serializer = CustomerSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
         else:
             return Response(serializer.errors)
-        #return Response('a')
-
     if request.method == 'GET':
         customers = Customer_Detail.objects.all()
         serializer = CustomerSerializer(customers, many = True)
